@@ -1,0 +1,31 @@
+.container{
+  display: grid;
+  grid-template: 'header header header header header'
+                  'nav main main main main';
+  header {
+    grid-area: header;
+    height: 4rem;
+    background-color: rgb(199, 188, 249);
+  }
+  nav{
+    grid-area: nav;
+    background-color: rgb(221, 214, 254);
+    height: 93vh;
+    ul {
+      li{
+        margin-block: .7rem;
+        list-style: none;
+        background-color: rgb(158, 212, 250);
+        a{
+          margin-inline-start: 1rem;
+          color: white;
+          font-size: 1.5rem;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+  main{
+    grid-area: main;
+  }
+}

@@ -1,5 +1,4 @@
 <div class="empleado">
-
   <div class="empleado_title">
     <h2>Empleados</h2>
     <button (click)="showCreateEmpleado()">Agregar Empleado</button>
@@ -12,29 +11,39 @@
         <th>Nombre Completo</th>
         <th>Edad</th>
         <th>Apto</th>
-        <th>Estado</th>
         <th>Password</th>
         <th>Departamento</th>
       </tr>
-      <tr *ngFor="let emp of empleado" >
-        <input #id type="text" [value]="emp.id" style="display: none;">
-        <td><input #identificacion type="text" [value]="emp.identificacion"></td>
-        <td><input #name  type="text" [value]="emp.nombre_completo"></td>
-        <td><input #age type="text" [value]="emp.edad"></td>
-        <td><input #apto type="text" [value]="emp.apto"></td>
-        <td><input #state type="text" [value]="emp.estado"></td>
-        <td><input #password type="text" [value]="emp.password"></td>
-        <td><input #departaments type="text" [value]="emp.departamento"></td>
+      <tr *ngFor="let emp of empleado">
+        <input style="display: none" #apto type="text" [value]="emp.apto" />
+        <input #id type="text" [value]="emp.id" style="display: none" />
+        <td>
+          <input #identificacion type="text" [value]="emp.identificacion" />
+        </td>
+        <td><input #name type="text" [value]="emp.nombre_completo" /></td>
+        <td><input #age type="text" [value]="emp.edad" /></td>
+        <td>{{ emp.apto }}</td>
+        <td style="display: none">
+          <input #state type="text" [value]="emp.estado" />
+        </td>
+        <td><input #password type="text" [value]="emp.password" /></td>
+        <td>
+          <select style="border: none; outline: none" #departament>
+            <option [value]="emp.departamento">{{ emp.departamento }}</option>
+            <option [value]="i.value" *ngFor="let i of departaments">
+              {{ i.value }}
+            </option>
+          </select>
+        </td>
         <td>
           <div class="button-content">
             <button
               type="submit"
-              (click)="editar({identificacion,name,age,apto,state,password,departaments,id})">
+              (click)="editar({identificacion,name,age,apto,state,password,departament,id})"
+            >
               <i class="fa-solid fa-pen-to-square"></i>
             </button>
-            <button
-            (click)="remove(id.value)"
-              type="submit">
+            <button (click)="remove(id.value)" type="submit">
               <i class="fa-solid fa-trash"></i>
             </button>
           </div>
@@ -48,56 +57,108 @@
       <h1>Crear Empleado</h1>
 
       <form [formGroup]="form" (ngSubmit)="create($event)">
-
         <div class="form_item">
           <label for="identificacion">Identificacion</label>
-          <input
-            placeholder="Ingrese La Identificacion"
-            type="text"
-            formControlName="identificacion">
+          <input type="text" formControlName="identificacion" />
         </div>
 
-        <div *ngIf="identificationField?.invalid && (identificationField?.dirty || identificationField?.touched)">
-          <strong style="color: red; margin-inline-start: 1.5rem" *ngIf="identificationField?.errors?.['required']">
+        <div
+          *ngIf="
+            identificationField?.invalid &&
+            (identificationField?.dirty || identificationField?.touched)
+          "
+        >
+          <strong
+            [style]="styleError"
+            *ngIf="identificationField?.errors?.['required']"
+          >
             Identification Requerida
           </strong>
-          <strong style="color: red; margin-inline-start: 1.5rem" *ngIf="identificationField?.errors?.['maxlength']">
-            Debe Ser Menor De 8 Caracteres
+          <strong
+            [style]="styleError"
+            *ngIf="identificationField?.errors?.['maxlength']"
+          >
+            Debe Ser Menor De 10 Caracteres
           </strong>
-          <strong style="color: red; margin-inline-start: 1.5rem" *ngIf="exits">
-            La Identificacion Debe Ser Unica
+          <strong
+            [style]="styleError"
+            *ngIf="identificationField?.errors?.['minlength']"
+          >
+            Debe Ser Mayor De 7 Caracteres
           </strong>
-      </div>
+          <strong
+            [style]="styleError"
+            *ngIf="identificationField?.errors?.['pattern']"
+          >
+            Solo Se Aceptan Numeros
+          </strong>
+        </div>
 
         <div class="form_item">
-          <label for="name">Nombre</label>
+          <label for="name">Nombre Completo</label>
           <input
-            placeholder="Ingrese El Nombre"
+            placeholder="Ingrese El Nombre Y Apellido"
             type="text"
-            formControlName="nombre_completo">
+            formControlName="nombre_completo"
+          />
+        </div>
+
+        <div
+          *ngIf="
+            nombre_completoField?.invalid &&
+            (nombre_completoField?.dirty || nombre_completoField?.touched)
+          "
+        >
+          <strong
+            [style]="styleError"
+            *ngIf="nombre_completoField?.errors?.['required']"
+          >
+            Nombre Y Apellido Requerido
+          </strong>
+          <strong
+            [style]="styleError"
+            *ngIf="nombre_completoField?.errors?.['pattern']"
+          >
+            Nombre O Apellido Invalido
+          </strong>
+          <strong
+            [style]="styleError"
+            *ngIf="nombre_completoField?.errors?.['minlength']"
+          >
+            Minimo 2 Caracteres
+          </strong>
+          <strong
+            [style]="styleError"
+            *ngIf="nombre_completoField?.errors?.['maxlength']"
+          >
+            Maximo 40 Caracteres
+          </strong>
         </div>
 
         <div class="form_item">
           <label for="age">Edad</label>
           <input
             placeholder="Ingrese La Edad"
-            type="number"
-            formControlName="edad">
-        </div>
-
-        <div class="form_item">
-          <label for="apto">Apto</label>
-          <input
-            type="checkbox"
-            formControlName="apto">
-        </div>
-
-        <div class="form_item">
-          <label for="state">Estado</label>
-          <input
-            placeholder="Estado"
             type="text"
-            formControlName="estado">
+            formControlName="edad"
+          />
+        </div>
+
+        <div
+          *ngIf="edadField?.invalid && (edadField?.dirty || edadField?.touched)"
+        >
+          <strong [style]="styleError" *ngIf="edadField?.errors?.['required']">
+            Edad Requerida
+          </strong>
+          <strong [style]="styleError" *ngIf="edadField?.errors?.['min']">
+            Debe Ser Mayor De Edad
+          </strong>
+          <strong [style]="styleError" *ngIf="edadField?.errors?.['max']">
+            Debe Ser Menor De 80 Años
+          </strong>
+          <strong [style]="styleError" *ngIf="edadField?.errors?.['pattern']">
+            Caracteres Invalidos
+          </strong>
         </div>
 
         <div class="form_item">
@@ -105,22 +166,74 @@
           <input
             placeholder="********"
             type="password"
-            formControlName="password">
+            formControlName="password"
+          />
+        </div>
+
+        <div
+          *ngIf="
+            passwordField?.invalid &&
+            (passwordField?.dirty || passwordField?.touched)
+          "
+        >
+          <strong
+            [style]="styleError"
+            *ngIf="passwordField?.errors?.['required']"
+          >
+            Contraseña Requerida
+          </strong>
+          <strong
+            [style]="styleError"
+            *ngIf="passwordField?.errors?.['minlength']"
+          >
+            Debe Tener Minimo 8 Caracteres
+          </strong>
+        </div>
+
+        <div class="form_item_apto">
+          <label for="apto">Se Considera Usted Apto</label>
+          <input type="checkbox" formControlName="apto" />
+        </div>
+        <div
+          *ngIf="aptoField?.invalid && (aptoField?.dirty || aptoField?.touched)"
+        >
+          <strong [style]="styleError" *ngIf="aptoField?.errors?.['required']">
+            Validar Si Es Apto
+          </strong>
         </div>
 
         <div class="form_item">
+          <label for="departamento">Selecionar Un Departamento </label>
           <select formControlName="departamento">
-            <option selected value="">Selecione Un Departamento</option>
-            <option value="atlantico">Atlantico</option>
-            <option value="sucre">Sucre</option>
-            <option value="bolivar">Bolivar</option>
+            <option [value]="d.value" *ngFor="let d of departaments">
+              {{ d.value }}
+            </option>
           </select>
         </div>
+
+        <div
+          *ngIf="
+            departamentoField?.invalid &&
+            (departamentoField?.dirty || departamentoField?.touched)
+          "
+        >
+          <strong
+            [style]="styleError"
+            *ngIf="departamentoField?.errors?.['required']"
+          >
+            Por Favor Escoger Un Departamento
+          </strong>
+        </div>
+
         <div class="form_item">
-          <button type="submit">Crear Empleado</button>
+          <button [disabled]="form.invalid" type="submit">
+            Crear Empleado
+          </button>
         </div>
       </form>
-      <button (click)="showCreateEmpleado()">back</button>
+      <button class="button_back" (click)="showCreateEmpleado()">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
     </div>
   </div>
 </div>
